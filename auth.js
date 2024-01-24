@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-const SubtleCrypto = globalThis.crypto.subtle;
+const { subtle: SubtleCrypto } = require('node:crypto').webcrypto;
 
 const jwtLifeTimeSeconds = 60;
 

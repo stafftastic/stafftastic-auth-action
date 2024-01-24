@@ -12,7 +12,7 @@
   in {
     devShell = eachSystem (system: pkgsFor.${system}.mkShell {
       buildInputs = with pkgsFor.${system}; [
-        nodejs_20
+        nodejs_18
       ];
     });
   };

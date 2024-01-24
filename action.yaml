@@ -1,0 +1,28 @@
+name: Authenticate with Stafftastic API
+description: >
+  Authenticate with the Stafftastic API, creating a JWT from a service account
+  and exchanging it for a short lived access token.
+inputs:
+  serviceAccountBase64:
+    description: The Base64-encoded JSON representation of a service account
+    required: true
+  tokenEndpoint:
+    description: The endpoint to use for token exchange
+    required: true
+    default: https://oauth2.stafftastic.com/oauth2/token
+outputs:
+  accessToken:
+    description: The exchanged access token
+    value: ${{steps.token.outputs.token}}
+runs:
+  using: composite
+  steps:
+    - name: Retrieve access token
+      id: token
+      shell: bash
+      run: |
+        token="$(env BASE64_SERVICE_ACCOUNT="${{inputs.serviceAccountBase64}}" TOKEN_ENDPOINT="${{inputs.tokenEndpoint}}" node "${{github.action_path}}/auth.js")"
+        if [ -z "$token" ]; then
+          exit 1
+        fi
+        echo "token=$token" >> "$GITHUB_OUTPUT"
